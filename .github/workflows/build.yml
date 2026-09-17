@@ -1,0 +1,58 @@
+name: Build PokeVmnic
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Android SDK platform
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
+            "platforms;android-36"
+
+      - name: Compile Java
+        run: |
+          mkdir -p build/classes
+
+          javac \
+            -cp "$ANDROID_HOME/platforms/android-36/android.jar" \
+            -d build/classes \
+            PokeVmnic.java
+
+      - name: Convert class to DEX
+        run: |
+          mkdir -p build/dex
+
+          "$ANDROID_HOME/build-tools/35.0.0/d8" \
+            --output build/dex \
+            build/classes/PokeVmnic.class
+
+      - name: Show build output
+        run: |
+          echo "=== Java classes ==="
+          find build/classes -type f -print
+
+          echo
+          echo "=== DEX files ==="
+          find build/dex -type f -print
+
+      - name: Upload DEX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PokeVmnic-dex
+          path: build/dex/classes.dex
+
