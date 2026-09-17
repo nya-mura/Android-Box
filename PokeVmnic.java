@@ -57,6 +57,10 @@ public class PokeVmnic {
                     System.out.println("    separate fd-passing step (e.g. SCM_RIGHTS),");
                     System.out.println("    or you check `ip link` on the host directly");
                     System.out.println("    to confirm avf_tap_" + suffix + " now exists.");
+                    System.out.println("[+] Sleeping 15s with fd held open — "
+                        + "check `ip link show avf_tap_" + suffix + "` NOW in another shell...");
+                    Thread.sleep(15000);
+                    // -----------------------
                 } else {
                     System.out.println("[-] Reply had no result (unexpected).");
                 }
