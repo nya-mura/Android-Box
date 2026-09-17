@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 
 public class PokeVmnic {
     private static final String SERVICE_NAME =
-        "android.system.virtualizationservice_internal.IVmnic/default";
+        "android.system.virtualizationservice_internal.IVmnic";
     private static final String INTERFACE_DESCRIPTOR =
         "android.system.virtualizationservice_internal.IVmnic";
 
